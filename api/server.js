@@ -28,7 +28,7 @@ server.get("/boards/:board_id", async (req, res, next) => {
     const id = parseInt(req.params.board_id)
     try {
         const board = await Boards.fetchOne(id);
-        if (board.length) {
+        if (board) {
           res.json(board);
         } else {
           next({ message: "No boards match the search criteria", status: 404 });
@@ -42,7 +42,6 @@ server.get("/boards/:board_id", async (req, res, next) => {
 server.post("/boards", async (req, res, next) => {
     const newBoard = req.body;
   try {
-    // Validate that newPet has all the required fields
     const newBoardValid = (
       newBoard.title !== undefined &&
       newBoard.category !== undefined &&
@@ -76,8 +75,7 @@ server.delete("/boards/:id", async (req, res, next) => {
 })
 
 //delete a card by id
-server.delete("boards/:board_id/cards/:card_id", async (req, res, next) => {
-   // const board_id = parseInt(req.params.board_id)
+server.delete("boards/cards/:card_id", async (req, res, next) => {
     const card_id = parseInt(req.params.card_id)
     try {
         const card = await Boards.fetchOneCard(card_id)
@@ -93,17 +91,17 @@ server.delete("boards/:board_id/cards/:card_id", async (req, res, next) => {
 })
 
 //create a new card on a board
-server.post("/boards/:board_id/cards", async (req, res, next) => {
-    const id =  parseInt(req.params.board_id)
+server.post("/boards/cards", async (req, res, next) => {
     const newCard = req.body
   try {
     const newCardValid = (
         newCard.title !== undefined &&
         newCard.text !== undefined &&
-        newCard.image_url !== undefined
+        newCard.image_url !== undefined &&
+        newCard.board_id !== undefined
     )
     if (newCardValid) {
-      const created = await Boards.createCard(newCard, id);
+      const created = await Boards.createCard(newCard);
       res.status(201).json(created);
     } else {
       next({ status: 422, message: 'title, category, and image are required' });
@@ -115,7 +113,7 @@ server.post("/boards/:board_id/cards", async (req, res, next) => {
 
 //edit upvotes on a card
 //currently updates the whole card, rememeber to fix
-server.put("/boards/:board_id/cards/:card_id", async (req, res, next) => {
+server.put("/boards/cards/:card_id/upvote", async (req, res, next) => {
     const id = parseInt(req.params.card_id)
     const changes = req.body.upvotes
     try {

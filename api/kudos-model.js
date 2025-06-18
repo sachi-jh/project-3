@@ -36,14 +36,14 @@ module.exports = {
         return card;
     },
 
-    async createCard(data, id){
+    async createCard(data){
         const newCard = await prisma.card.create({
             data: {
               title: data.title,
               text: data.text,
               image_url: data.image_url,
               board: {
-                connect: { id: Number(id) }
+                connect: { id: Number(data.board_id) }
               }
             }
           });
