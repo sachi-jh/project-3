@@ -9,9 +9,9 @@ server.use(cors());
 server.use(helmet());
 
 server.get("/boards", async (req, res, next) => {
-  const search = req.query;
+    const { category, search } = req.query;
   try {
-    const boards = await Boards.fetchAll(search);
+    const boards = await Boards.fetchAll({category, search});
     if (boards.length) {
       res.json(boards);
     } else {

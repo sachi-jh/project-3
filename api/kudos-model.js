@@ -3,8 +3,16 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 module.exports = {
-    async fetchAll(where) {
-        const boards = await prisma.board.findMany({where: where, include: {cards: true}});
+    async fetchAll(search = {}) {
+        const boards = await prisma.board.findMany({where: {
+            ...(search.category && { category: search.category }),
+            ...(search.search && {
+              title: {
+                contains: search.search,
+                mode: 'insensitive',
+              }
+            }),
+          }, include: {cards: true}});
         return boards;
     },
 
