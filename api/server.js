@@ -23,6 +23,21 @@ server.get("/boards", async (req, res, next) => {
   }
 });
 
+//fetch a single board by id along with cards
+server.get("/boards/:board_id", async (req, res, next) => {
+    const id = parseInt(req.params.board_id)
+    try {
+        const board = await Boards.fetchOne(id);
+        if (board.length) {
+          res.json(board);
+        } else {
+          next({ message: "No boards match the search criteria", status: 404 });
+        }
+      } catch (err) {
+        next(err);
+      }
+})
+
 //create a new board
 server.post("/boards", async (req, res, next) => {
     const newBoard = req.body;
@@ -44,6 +59,7 @@ server.post("/boards", async (req, res, next) => {
   }
 })
 
+//delete a board
 server.delete("/boards/:id", async (req, res, next) => {
     const id = parseInt(req.params.id)
     try {
@@ -59,9 +75,26 @@ server.delete("/boards/:id", async (req, res, next) => {
     }
 })
 
+//delete a card by id
+server.delete("boards/:board_id/cards/:card_id", async (req, res, next) => {
+   // const board_id = parseInt(req.params.board_id)
+    const card_id = parseInt(req.params.card_id)
+    try {
+        const card = await Boards.fetchOneCard(card_id)
+        if (card) {
+            const deleted = await Boards.deleteCard(id)
+            res.json(deleted)
+        } else {
+            next({ status: 404, message: 'board not found' })
+        }
+    } catch (err) {
+        next(err)
+    }
+})
+
 //create a new card on a board
-server.post("/boards/:id", async (req, res, next) => {
-    const id =  parseInt(req.params.id)
+server.post("/boards/:board_id/cards", async (req, res, next) => {
+    const id =  parseInt(req.params.board_id)
     const newCard = req.body
   try {
     const newCardValid = (
@@ -70,16 +103,39 @@ server.post("/boards/:id", async (req, res, next) => {
         newCard.image_url !== undefined
     )
     if (newCardValid) {
-      const created = await Boards.createCard(newCard, id)
-      res.status(201).json(created)
+      const created = await Boards.createCard(newCard, id);
+      res.status(201).json(created);
     } else {
-      next({ status: 422, message: 'title, category, and image are required' })
+      next({ status: 422, message: 'title, category, and image are required' });
     }
   } catch (err) {
-    next(err)
+    next(err);
   }
 })
 
+//edit upvotes on a card
+//currently updates the whole card, rememeber to fix
+server.put("/boards/:board_id/cards/:card_id", async (req, res, next) => {
+    const id = parseInt(req.params.card_id)
+    const changes = req.body.upvotes
+    try {
+        const card = await Boards.fetchOneCard(id)
+        const changesValid = (
+            changes.title !== undefined &&
+            changes.text !== undefined &&
+            changes.image_url !== undefined &&
+            changes.upvotes !== undefined
+        )
+        if (card && changesValid) {
+            const updated = await Boards.updateCardUpvote(id, changes);
+            res.status(201).json(updated);
+        } else {
+            next({ status: 422, message: 'title, category, and image are required' });
+        }
+    } catch (err) {
+        next(err)
+    }
+})
 
 //error handling middleware
 server.use((req, res, next) => {

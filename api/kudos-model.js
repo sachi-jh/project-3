@@ -12,12 +12,12 @@ module.exports = {
                 mode: 'insensitive',
               }
             }),
-          }, include: {cards: true}});
+          }});
         return boards;
     },
 
     async fetchOne(id) {
-        const board = await prisma.board.findUnique({where: {id: id}});
+        const board = await prisma.board.findUnique({where: {id: id},  include: {cards: true}});
         return board;
     },
 
@@ -25,10 +25,15 @@ module.exports = {
         const newBoard = await prisma.board.create({data: data});
         return newBoard;
     },
-    
+
     async delete(id){
         const deletedBoard = await prisma.board.delete({where: {id: id}});
         return deletedBoard;
+    },
+
+    async fetchOneCard(id){
+        const card = await prisma.card.findUnique({where: {id: id}});
+        return card;
     },
 
     async createCard(data, id){
@@ -44,4 +49,14 @@ module.exports = {
           });
         return newCard;
     },
+
+    async deleteCard(id) {
+        const deletedCard = await prisma.card.delete({where: {id: id}});
+        return deletedCard;
+    },
+
+    async updateCardUpvote(id, data) {
+        const updatedCard = await prisma.card.update({where: {id: id}, data: data});
+        return updatedCard;
+    }
 }
