@@ -1,15 +1,14 @@
 import { Link } from 'react-router';
 import './Board.css'
 
-const Board = () => {
-    const id = 1;
+const Board = ({id, title, img, category}) => {
     return(
         <>
         <div className="board">
-            <img src="#" alt="board img"></img>
-            <h3>Board Title</h3>
-            <p>Board Category</p>
-            <button><Link to={`/board/${id}`}>View Board</Link></button>
+            <img src={img} alt="board img"></img>
+            <h3>{title}</h3>
+            <p>{category}</p>
+            <button><Link to={`/board/${id}`} state={{title: title, category: category}}>View Board</Link></button>
             <button>Delete Board</button>
         </div>
         </>

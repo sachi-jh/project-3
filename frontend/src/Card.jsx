@@ -1,11 +1,17 @@
-const Card = () => {
+import './Card.css'
+
+const Card = ({title, text, img}) => {
     return(
         <>
-        <h3>Card Title</h3>
-        <p>Card Text</p>
-        <img src="#" alt="card img"/>
-        <button>Upvote</button>
-        <button>Delete</button>
+        <div className="card">
+            <h3>{title}</h3>
+            <p>{text}</p>
+            <img src={img} alt="card img"/>
+            <div className='card-buttons'>
+                <button>Upvote</button>
+                <button>Delete</button>
+            </div>
+        </div>
         </>
     );
 };
