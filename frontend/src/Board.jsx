@@ -11,6 +11,6 @@ const Board = () => {
             <button>Delete Board</button>
         </div>
         </>
-    )
-}
-export default Board
+    );
+};
+export default Board;

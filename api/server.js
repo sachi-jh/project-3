@@ -1,0 +1,152 @@
+const express = require("express");
+const cors = require("cors");
+const Boards = require("./kudos-model");
+const helmet = require("helmet");
+
+const server = express();
+server.use(express.json());
+server.use(cors());
+server.use(helmet());
+
+//fetch all boards, or by category, or by search for title
+server.get("/boards", async (req, res, next) => {
+    const { category, search } = req.query;
+  try {
+    const boards = await Boards.fetchAll({category, search});
+    if (boards.length) {
+      res.json(boards);
+    } else {
+      next({ message: "No boards match the search criteria", status: 404 });
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
+//fetch a single board by id along with cards
+server.get("/boards/:board_id", async (req, res, next) => {
+    const id = parseInt(req.params.board_id)
+    try {
+        const board = await Boards.fetchOne(id);
+        if (board.length) {
+          res.json(board);
+        } else {
+          next({ message: "No boards match the search criteria", status: 404 });
+        }
+      } catch (err) {
+        next(err);
+      }
+})
+
+//create a new board
+server.post("/boards", async (req, res, next) => {
+    const newBoard = req.body;
+  try {
+    // Validate that newPet has all the required fields
+    const newBoardValid = (
+      newBoard.title !== undefined &&
+      newBoard.category !== undefined &&
+      newBoard.image_url !== undefined
+    )
+    if (newBoardValid) {
+      const created = await Boards.create(newBoard);
+      res.status(201).json(created);
+    } else {
+      next({ status: 422, message: 'title, category, and image are required' });
+    }
+  } catch (err) {
+    next(err);
+  }
+})
+
+//delete a board
+server.delete("/boards/:id", async (req, res, next) => {
+    const id = parseInt(req.params.id)
+    try {
+        const board = await Boards.fetchOne(id)
+        if (board) {
+            const deleted = await Boards.delete(id)
+            res.json(deleted)
+        } else {
+            next({ status: 404, message: 'board not found' })
+        }
+    } catch (err) {
+        next(err)
+    }
+})
+
+//delete a card by id
+server.delete("boards/:board_id/cards/:card_id", async (req, res, next) => {
+   // const board_id = parseInt(req.params.board_id)
+    const card_id = parseInt(req.params.card_id)
+    try {
+        const card = await Boards.fetchOneCard(card_id)
+        if (card) {
+            const deleted = await Boards.deleteCard(id)
+            res.json(deleted)
+        } else {
+            next({ status: 404, message: 'board not found' })
+        }
+    } catch (err) {
+        next(err)
+    }
+})
+
+//create a new card on a board
+server.post("/boards/:board_id/cards", async (req, res, next) => {
+    const id =  parseInt(req.params.board_id)
+    const newCard = req.body
+  try {
+    const newCardValid = (
+        newCard.title !== undefined &&
+        newCard.text !== undefined &&
+        newCard.image_url !== undefined
+    )
+    if (newCardValid) {
+      const created = await Boards.createCard(newCard, id);
+      res.status(201).json(created);
+    } else {
+      next({ status: 422, message: 'title, category, and image are required' });
+    }
+  } catch (err) {
+    next(err);
+  }
+})
+
+//edit upvotes on a card
+//currently updates the whole card, rememeber to fix
+server.put("/boards/:board_id/cards/:card_id", async (req, res, next) => {
+    const id = parseInt(req.params.card_id)
+    const changes = req.body.upvotes
+    try {
+        const card = await Boards.fetchOneCard(id)
+        const changesValid = (
+            changes.title !== undefined &&
+            changes.text !== undefined &&
+            changes.image_url !== undefined &&
+            changes.upvotes !== undefined
+        )
+        if (card && changesValid) {
+            const updated = await Boards.updateCardUpvote(id, changes);
+            res.status(201).json(updated);
+        } else {
+            next({ status: 422, message: 'title, category, and image are required' });
+        }
+    } catch (err) {
+        next(err)
+    }
+})
+
+//error handling middleware
+server.use((req, res, next) => {
+    next({ status: 404, message: "Not found" });
+  });
+
+// Error handling middleware
+server.use((err, req, res, next) => {
+  const { message, status = 500 } = err;
+  console.log(message);
+  res.status(status).json({ message }); // Unsafe in prod
+});
+
+module.exports = server;

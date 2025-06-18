@@ -4,11 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "install": "cd client && npm install && cd ../server && npm install",
-    "start": "npm run server",
-    "server": "cd backend && nodemon app.js",
     "client": "cd frontend && npm run dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --env-file=.env --watch index.js",
+    "start": "node index.js",
+    "build": "npm install && npm run db:init",
+    "db:migrate": "prisma migrate dev",
+    "db:reset": "prisma migrate reset --force",
+    "db:seed": "node prisma/seed.js",
+    "db:init": "npm run db:reset && npm run db:migrate && npm run db:seed",
+    "psql": "psql kudosdb -U new_app_user"
   },
   "repository": {
     "type": "git",
@@ -20,5 +25,14 @@
   "bugs": {
     "url": "https://github.com/sachi-jh/project-3/issues"
   },
-  "homepage": "https://github.com/sachi-jh/project-3#readme"
+  "homepage": "https://github.com/sachi-jh/project-3#readme",
+  "devDependencies": {
+    "prisma": "^6.10.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.10.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0"
+  }
 }

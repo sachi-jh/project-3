@@ -5,6 +5,6 @@ const BoardDetails = () => {
         <button>Create a Card</button>
         <Card/>
         </>
-    )
-}
-export default BoardDetails
+    );
+};
+export default BoardDetails;
