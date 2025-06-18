@@ -8,6 +8,7 @@ server.use(express.json());
 server.use(cors());
 server.use(helmet());
 
+//fetch all boards, or by category, or by search for title
 server.get("/boards", async (req, res, next) => {
     const { category, search } = req.query;
   try {
@@ -22,8 +23,9 @@ server.get("/boards", async (req, res, next) => {
   }
 });
 
+//create a new board
 server.post("/boards", async (req, res, next) => {
-    const newBoard = req.body
+    const newBoard = req.body;
   try {
     // Validate that newPet has all the required fields
     const newBoardValid = (
@@ -32,16 +34,32 @@ server.post("/boards", async (req, res, next) => {
       newBoard.image_url !== undefined
     )
     if (newBoardValid) {
-      const created = await Boards.create(newBoard)
-      res.status(201).json(created)
+      const created = await Boards.create(newBoard);
+      res.status(201).json(created);
     } else {
-      next({ status: 422, message: 'title, category, and image are required' })
+      next({ status: 422, message: 'title, category, and image are required' });
     }
   } catch (err) {
-    next(err)
+    next(err);
   }
 })
 
+server.delete("/boards/:id", async (req, res, next) => {
+    const id = parseInt(req.params.id)
+    try {
+        const board = await Boards.fetchOne(id)
+        if (board) {
+            const deleted = await Boards.delete(id)
+            res.json(deleted)
+        } else {
+            next({ status: 404, message: 'board not found' })
+        }
+    } catch (err) {
+        next(err)
+    }
+})
+
+//create a new card on a board
 server.post("/boards/:id", async (req, res, next) => {
     const id =  parseInt(req.params.id)
     const newCard = req.body
@@ -62,6 +80,8 @@ server.post("/boards/:id", async (req, res, next) => {
   }
 })
 
+
+//error handling middleware
 server.use((req, res, next) => {
     next({ status: 404, message: "Not found" });
   });

@@ -25,12 +25,7 @@ module.exports = {
         const newBoard = await prisma.board.create({data: data});
         return newBoard;
     },
-
-    async update(id, changes){
-        const updatedBoard = await prisma.board.update({where: {id: id}, data: changes});
-        return updatedBoard;
-    },
-
+    
     async delete(id){
         const deletedBoard = await prisma.board.delete({where: {id: id}});
         return deletedBoard;
