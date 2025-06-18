@@ -1,13 +1,30 @@
-const Filter = () => {
+import { useState } from "react";
+
+const FilterCategoryEnum = {
+    all: "",
+    recent: "recent",
+    celebration: "Celebration",
+    thankyou :"Thank You",
+    inspiration :"Inspiration",
+};
+
+const Filter = ({filterBoards}) => {
+    const [value, setValue] = useState(FilterCategoryEnum.all);
+
+    const handleChange = async (event) => {
+        setValue(event);
+        await filterBoards(event);
+    }
+
     return(
         <>
         <form>
-            <select name="filter" id="filter">
-                <option value="all">All</option>
-                <option value="recent">Recent</option>
-                <option value="celebration">Celebration</option>
-                <option value="thankyou">Thank you</option>
-                <option value="inspiration">Inspiration</option>
+            <select name="filter" id="filter" onChange={e => handleChange(e.target.value)} value={value}>
+                <option value={FilterCategoryEnum.all}>All</option>
+                <option value={FilterCategoryEnum.recent}>Recent</option>
+                <option value={FilterCategoryEnum.celebration}>Celebration</option>
+                <option value={FilterCategoryEnum.thankyou}>Thank you</option>
+                <option value={FilterCategoryEnum.inspiration}>Inspiration</option>
             </select>
         </form>
         </>
