@@ -7,5 +7,6 @@ const Card = () => {
         <button>Upvote</button>
         <button>Delete</button>
         </>
-    )
-}
+    );
+};
+export default Card;

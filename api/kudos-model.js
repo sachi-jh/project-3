@@ -1,0 +1,44 @@
+const { PrismaClient } = require('@prisma/client')
+
+const prisma = new PrismaClient()
+
+module.exports = {
+    async fetchAll(where) {
+        const boards = await prisma.board.findMany({where: where, include: {cards: true}});
+        return boards;
+    },
+
+    async fetchOne(id) {
+        const board = await prisma.board.findUnique({where: {id: id}});
+        return board;
+    },
+
+    async create(data){
+        const newBoard = await prisma.board.create({data: data});
+        return newBoard;
+    },
+
+    async update(id, changes){
+        const updatedBoard = await prisma.board.update({where: {id: id}, data: changes});
+        return updatedBoard;
+    },
+
+    async delete(id){
+        const deletedBoard = await prisma.board.delete({where: {id: id}});
+        return deletedBoard;
+    },
+
+    async createCard(data, id){
+        const newCard = await prisma.card.create({
+            data: {
+              title: data.title,
+              text: data.text,
+              image_url: data.image_url,
+              board: {
+                connect: { id: Number(id) }
+              }
+            }
+          });
+        return newCard;
+    },
+}
