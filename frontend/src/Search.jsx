@@ -1,10 +1,24 @@
-const Search = () => {
+import { useState } from "react"
+
+
+const Search = ({searchBoards}) => {
+    const [searchQuery, setSearchQuery] = useState('')
+
+    const handleSearchChange = (event) =>{
+        setSearchQuery(event)
+    }
+
+    const clearSearch = () => {
+        setSearchQuery('')
+        searchBoards('')
+    }
+
     return (
         <>
-            <form >
-                <input type="text" id="search" value="search"></input>
+            <form onSubmit={() => searchBoards(searchQuery)}>
+                <input type="text" id="search" placeholder="search" onChange={e=>handleSearchChange(e.target.value)} value={searchQuery}></input>
                 <button type="submit">Search</button>
-                <button>Clear</button>
+                <button onClick={clearSearch}>Clear</button>
             </form>
         </>
     )

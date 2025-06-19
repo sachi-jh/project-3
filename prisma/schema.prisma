@@ -18,7 +18,7 @@ model Card {
   title String
   text String
   image_url String?
-  board Board @relation(fields: [board_id], references: [id])
+  board Board @relation(fields: [board_id], references: [id], onDelete: Cascade)
   board_id Int
   upvotes Int @default(0)
   isUpvoted Boolean @default(false)
