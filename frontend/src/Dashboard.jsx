@@ -9,12 +9,13 @@ import CreateNewBoardForm from "./CreateNewBoardForm"
 const Dashboard = () => {
     const [data, setData] = useState([]);
     const [createBoardModal, setCreateBoardModal] = useState(false);
-    const fetchAllURL = "http://localhost:3000/boards";
+
 
     useEffect(() => {
-        const callBackendAPI = async (url) => {
+        const callBackendAPI = async () => {
+            const fetchAllURL = "http://localhost:3000/boards";
             try {
-              const response = await fetch(url);
+              const response = await fetch(fetchAllURL);
               if (!response.ok) {
                 throw new Error("Failed to fetch data");
               }
@@ -25,10 +26,10 @@ const Dashboard = () => {
               console.log(error);
             }
           };
-        callBackendAPI(fetchAllURL);
+        callBackendAPI();
       }, []);
 
-    ///add recent functionality!!!
+    ///filter boards by category or creation date
     const filterBoards = async (val) => {
         if(val !== "recent"){
             const fetchCategoryURL = "http://localhost:3000/boards?category=" + val;
@@ -44,6 +45,18 @@ const Dashboard = () => {
             }
         } else {
             //recent functionality
+            const fetchAllURL = "http://localhost:3000/boards";
+            try {
+                const response = await fetch(fetchAllURL);
+                if (!response.ok) {
+                  throw new Error("Failed to fetch data");
+                }
+                const body = await response.json();
+                const recent = body.slice(-6).reverse();
+                setData(recent);
+            } catch (error) {
+                console.log(error);
+            }
 
         }
     }
@@ -68,12 +81,14 @@ const Dashboard = () => {
         }
     }
 
+    //handle new board form
     const openNewBoardForm = () => {
         setCreateBoardModal(true);
     }
     const closeNewBoardForm = () => {
         setCreateBoardModal(false);
     }
+
     //loading screen
     if(data.length === 0) {
         return(<div>Loading...</div>)
