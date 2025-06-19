@@ -20,7 +20,7 @@ async function main() {
         category: board.category,
         image_url: board.image_url,
         cards: {
-          
+          create: board.cards
         }
       }
     });

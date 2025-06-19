@@ -28,8 +28,6 @@ const Dashboard = () => {
             }
           };
         callBackendAPI(fetchAllURL);
-
-
       }, []);
 
     ///add recent functionality!!!
@@ -43,7 +41,6 @@ const Dashboard = () => {
                 }
                 const body = await response.json();
                 setData(body);
-
             } catch (error) {
                 console.log(error);
             }
@@ -55,9 +52,7 @@ const Dashboard = () => {
 
     const searchBoards = async (val) => {
         event.preventDefault();
-        console.log(val);
         const searchedData = data.filter((board) => board.title.toLowerCase().includes(val.toLowerCase()));
-        console.log(searchedData);
         setData(searchedData);
         if(val === "" || searchedData.length == 0) {
             const fetchAllURL = "http://localhost:3000/boards";
@@ -69,9 +64,9 @@ const Dashboard = () => {
                 const body = await response.json();
                 setData(body);
 
-              } catch (error) {
+            } catch (error) {
                 console.log(error);
-              }
+            }
         }
     }
 
