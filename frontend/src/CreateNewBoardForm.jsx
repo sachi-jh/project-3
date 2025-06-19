@@ -35,7 +35,8 @@ const CreateNewBoardForm = ({closeNewBoardForm, setData, data}) => {
             body: JSON.stringify({
                 title: title,
                 category: category,
-                image_url: "https://picsum.photos/200/300"
+                image_url: "https://picsum.photos/200/300",
+                author: author
             }),
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
@@ -57,7 +58,7 @@ const CreateNewBoardForm = ({closeNewBoardForm, setData, data}) => {
       <div id="Modal" className="modal">
         <div className="modal-content">
           <span className="close" onClick={closeNewBoardForm}>&times;</span>
-          <form id="createNewBoardForm" onSubmit={createNewBoard}>
+          <form id="create-new-board-form" onSubmit={createNewBoard}>
             <label htmlFor="title">Title:</label>
             <input type="text" id="title"  name="title" placeholder="Enter a title" onChange={handleTitleChange} required/>
 
