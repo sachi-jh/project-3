@@ -3,15 +3,13 @@ import Filter from "./Filter"
 import Search from "./Search"
 import { useEffect, useState } from "react"
 import "./Dashboard.css"
-
+import CreateNewBoardForm from "./CreateNewBoardForm"
 
 
 const Dashboard = () => {
     const [data, setData] = useState([]);
-    const [filter, setFilter] = useState("");
+    const [createBoardModal, setCreateBoardModal] = useState(false);
     const fetchAllURL = "http://localhost:3000/boards";
-
-
 
     useEffect(() => {
         const callBackendAPI = async (url) => {
@@ -49,7 +47,7 @@ const Dashboard = () => {
 
         }
     }
-
+    //searches by title
     const searchBoards = async (val) => {
         event.preventDefault();
         const searchedData = data.filter((board) => board.title.toLowerCase().includes(val.toLowerCase()));
@@ -70,6 +68,13 @@ const Dashboard = () => {
         }
     }
 
+    const openNewBoardForm = () => {
+        setCreateBoardModal(true);
+    }
+    const closeNewBoardForm = () => {
+        setCreateBoardModal(false);
+    }
+    //loading screen
     if(data.length === 0) {
         return(<div>Loading...</div>)
     }
@@ -81,13 +86,17 @@ const Dashboard = () => {
             <Search searchBoards={searchBoards}/>
             <Filter filterBoards={filterBoards}/>
         </div>
-        <button className="create-board">Create New Board</button>
+        <button className="create-board" onClick={openNewBoardForm}>Create New Board</button>
         <div className="board-list">
             {data.map((board) => {
                 return <Board key={board.id} id={board.id} title={board.title} img={board.image_url} category={board.category}/>
             })}
         </div>
-
+        {createBoardModal &&
+            <div className={createBoardModal ? 'shown' : 'hidden'}>
+                <CreateNewBoardForm closeNewBoardForm={closeNewBoardForm}/>
+            </div>
+        }
         </>
     );
 };

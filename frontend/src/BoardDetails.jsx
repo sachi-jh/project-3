@@ -6,7 +6,6 @@ import "./BoardDetails.css";
 const BoardDetails = () => {
   const { id } = useParams();
   const { title, category } = useLocation().state;
-
   const [boardData, setBoardData] = useState(null);
 
   useEffect(() => {
