@@ -11,3 +11,11 @@
   display: flex;
   flex-wrap: wrap;
 }
+
+.shown {
+  display: block;
+}
+
+.hidden {
+  display: none;
+}

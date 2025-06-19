@@ -2,12 +2,13 @@ import { Link, useParams, useLocation } from "react-router";
 import { useState, useEffect } from "react";
 import Card from "./Card";
 import "./BoardDetails.css";
+import CreateNewCardForm from "./CreateNewCardForm";
 
 const BoardDetails = () => {
   const { id } = useParams();
-  const { title, category } = useLocation().state;
-
+  //const { title, category } = useLocation().state;
   const [boardData, setBoardData] = useState(null);
+  const [createCardModal, setCreateCardModal] = useState(false);
 
   useEffect(() => {
     const callBackendAPI = async () => {
@@ -25,20 +26,34 @@ const BoardDetails = () => {
     callBackendAPI();
   }, []);
 
+  const openNewCardForm = () => {
+    setCreateCardModal(true);
+  }
+  const closeNewCardForm = () => {
+    setCreateCardModal(false);
+  }
+
+
   if (!boardData) {
     return <div>Loading...</div>;
   }
   return (
     <>
       <Link to="/">Back to Board List</Link>
-      <h2>{title}</h2>
-      <h3>{category}</h3>
-      <button>Create a Card</button>
+      <h2>{boardData.title}</h2>
+      <h3>{boardData.category}</h3>
+      <button onClick={openNewCardForm}>Create a Card</button>
       <div className="cards-list">
         {boardData?.cards?.map((card) => {
             return <Card key={card.id} title={card.title} text={card.text} img={card.image_url}/>;
         })}
       </div>
+      {createCardModal &&
+        <div className={createCardModal ? 'shown' : 'hidden'}>
+          <CreateNewCardForm closeNewCardForm={closeNewCardForm} id={id}/>
+        </div>
+
+      }
     </>
   );
 };

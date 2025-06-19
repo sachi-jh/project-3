@@ -3,20 +3,19 @@ import Filter from "./Filter"
 import Search from "./Search"
 import { useEffect, useState } from "react"
 import "./Dashboard.css"
-
+import CreateNewBoardForm from "./CreateNewBoardForm"
 
 
 const Dashboard = () => {
     const [data, setData] = useState([]);
-    const [filter, setFilter] = useState("");
-    const fetchAllURL = "http://localhost:3000/boards";
-
+    const [createBoardModal, setCreateBoardModal] = useState(false);
 
 
     useEffect(() => {
-        const callBackendAPI = async (url) => {
+        const callBackendAPI = async () => {
+            const fetchAllURL = "http://localhost:3000/boards";
             try {
-              const response = await fetch(url);
+              const response = await fetch(fetchAllURL);
               if (!response.ok) {
                 throw new Error("Failed to fetch data");
               }
@@ -27,10 +26,10 @@ const Dashboard = () => {
               console.log(error);
             }
           };
-        callBackendAPI(fetchAllURL);
+        callBackendAPI();
       }, []);
 
-    ///add recent functionality!!!
+    ///filter boards by category or creation date --> refactor to remove fetch and filter on client side
     const filterBoards = async (val) => {
         if(val !== "recent"){
             const fetchCategoryURL = "http://localhost:3000/boards?category=" + val;
@@ -46,10 +45,21 @@ const Dashboard = () => {
             }
         } else {
             //recent functionality
-
+            const fetchAllURL = "http://localhost:3000/boards";
+            try {
+                const response = await fetch(fetchAllURL);
+                if (!response.ok) {
+                  throw new Error("Failed to fetch data");
+                }
+                const body = await response.json();
+                const recent = body.slice(-6).reverse();
+                setData(recent);
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
-
+    //searches by title
     const searchBoards = async (val) => {
         event.preventDefault();
         const searchedData = data.filter((board) => board.title.toLowerCase().includes(val.toLowerCase()));
@@ -70,6 +80,15 @@ const Dashboard = () => {
         }
     }
 
+    //handle new board form
+    const openNewBoardForm = () => {
+        setCreateBoardModal(true);
+    }
+    const closeNewBoardForm = () => {
+        setCreateBoardModal(false);
+    }
+
+    //loading screen
     if(data.length === 0) {
         return(<div>Loading...</div>)
     }
@@ -81,13 +100,17 @@ const Dashboard = () => {
             <Search searchBoards={searchBoards}/>
             <Filter filterBoards={filterBoards}/>
         </div>
-        <button className="create-board">Create New Board</button>
+        <button className="create-board" onClick={openNewBoardForm}>Create New Board</button>
         <div className="board-list">
             {data.map((board) => {
                 return <Board key={board.id} id={board.id} title={board.title} img={board.image_url} category={board.category}/>
             })}
         </div>
-
+        {createBoardModal &&
+            <div className={createBoardModal ? 'shown' : 'hidden'}>
+                <CreateNewBoardForm closeNewBoardForm={closeNewBoardForm} setData={setData} data={data}/>
+            </div>
+        }
         </>
     );
 };

@@ -17,6 +17,7 @@ model Card {
   id Int @id @default(autoincrement())
   title String
   text String
+  author String?
   image_url String?
   board Board @relation(fields: [board_id], references: [id], onDelete: Cascade)
   board_id Int
@@ -28,6 +29,7 @@ model Board {
   id Int @id @default(autoincrement())
   title String
   category String
+  author String?
   image_url String
   cards Card[]
   createdAt DateTime @default(now())
