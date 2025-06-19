@@ -11,9 +11,9 @@ const FilterCategoryEnum = {
 const Filter = ({filterBoards}) => {
     const [value, setValue] = useState(FilterCategoryEnum.all);
 
-    const handleChange = async (event) => {
-        setValue(event);
-        await filterBoards(event);
+    const handleChange = async (value) => {
+        setValue(value);
+        await filterBoards(value);
     }
 
     return(

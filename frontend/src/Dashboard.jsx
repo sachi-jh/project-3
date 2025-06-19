@@ -36,7 +36,6 @@ const Dashboard = () => {
     const filterBoards = async (val) => {
         if(val !== "recent"){
             const fetchCategoryURL = "http://localhost:3000/boards?category=" + val;
-            console.log(fetchCategoryURL)
             try {
                 const response = await fetch(fetchCategoryURL);
                 if (!response.ok) {
@@ -49,7 +48,30 @@ const Dashboard = () => {
                 console.log(error);
             }
         } else {
+            //recent functionality
 
+        }
+    }
+
+    const searchBoards = async (val) => {
+        event.preventDefault();
+        console.log(val);
+        const searchedData = data.filter((board) => board.title.toLowerCase().includes(val.toLowerCase()));
+        console.log(searchedData);
+        setData(searchedData);
+        if(val === "" || searchedData.length == 0) {
+            const fetchAllURL = "http://localhost:3000/boards";
+            try {
+                const response = await fetch(fetchAllURL);
+                if (!response.ok) {
+                  throw new Error("Failed to fetch data");
+                }
+                const body = await response.json();
+                setData(body);
+
+              } catch (error) {
+                console.log(error);
+              }
         }
     }
 
@@ -61,7 +83,7 @@ const Dashboard = () => {
         <>
         <h1>Dashboard</h1>
         <div className="search-filter">
-            <Search />
+            <Search searchBoards={searchBoards}/>
             <Filter filterBoards={filterBoards}/>
         </div>
         <button className="create-board">Create New Board</button>
