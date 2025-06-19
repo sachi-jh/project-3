@@ -29,7 +29,7 @@ const Dashboard = () => {
         callBackendAPI();
       }, []);
 
-    ///filter boards by category or creation date
+    ///filter boards by category or creation date --> refactor to remove fetch and filter on client side
     const filterBoards = async (val) => {
         if(val !== "recent"){
             const fetchCategoryURL = "http://localhost:3000/boards?category=" + val;
@@ -57,7 +57,6 @@ const Dashboard = () => {
             } catch (error) {
                 console.log(error);
             }
-
         }
     }
     //searches by title
@@ -109,7 +108,7 @@ const Dashboard = () => {
         </div>
         {createBoardModal &&
             <div className={createBoardModal ? 'shown' : 'hidden'}>
-                <CreateNewBoardForm closeNewBoardForm={closeNewBoardForm}/>
+                <CreateNewBoardForm closeNewBoardForm={closeNewBoardForm} setData={setData} data={data}/>
             </div>
         }
         </>
