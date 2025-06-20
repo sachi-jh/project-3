@@ -32,7 +32,7 @@ module.exports = {
     },
 
     async fetchOneCard(id){
-        const card = await prisma.card.findUnique({where: {id: id}});
+        const card = await prisma.card.findUnique({where: {id: id}, include: {comments: true}});
         return card;
     },
 
@@ -59,5 +59,22 @@ module.exports = {
     async updateCardUpvote(id) {
         const updatedCard = await prisma.card.update({where: {id: id}, data: {upvotes: { increment: 1 }}});
         return updatedCard;
+    },
+    async updateCardPin (id) {
+      const card = await prisma.card.findUnique({where: {id: id}});
+      const updatedCard = await prisma.card.update({where: {id: id}, data: {isPinned: { set: !card.isPinned }, pinnedAt: card.isPinned ? null : new Date()}});
+      return updatedCard;
+    },
+    async createComment (data) {
+      const newComment = await prisma.comment.create({
+        data: {
+          text: data.text,
+          author: data.author,
+          card: {
+            connect: { id: Number(data.card_id) }
+          }
+        }
+      });
+      return newComment;
     }
 }
