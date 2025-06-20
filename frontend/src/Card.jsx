@@ -1,5 +1,8 @@
 import './Card.css'
 import {useState} from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faThumbtack } from '@fortawesome/free-solid-svg-icons';
+
 
 const Card = ({id, title, text, img, upvotes, author}) => {
     const [upvote,  setUpvote] = useState(upvotes);
@@ -48,6 +51,7 @@ const Card = ({id, title, text, img, upvotes, author}) => {
             <div className='card-buttons'>
                 <button onClick={() => incrementUpvote(id)}>Upvote: {upvote}</button>
                 <button onClick={() => deleteCard(id)}>Delete</button>
+                <button><FontAwesomeIcon icon={faThumbtack} /></button>
             </div>
         </div>
         </>
