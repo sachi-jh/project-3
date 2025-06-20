@@ -79,7 +79,6 @@ const CreateNewCardForm = ({closeNewCardForm, id}) => {
             }
             const body = await response.json();
             console.log(body);
-            //setData([...data, body]);
         } catch (error) {
             console.log(error);
         }
