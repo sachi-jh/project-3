@@ -5,8 +5,9 @@ import { faThumbtack } from '@fortawesome/free-solid-svg-icons';
 const dbApiPath = import.meta.env.VITE_API_PATH;
 
 
-const Card = ({id, title, text, img, upvotes, author}) => {
+const Card = ({id, title, text, img, upvotes, author, pinnedBool}) => {
     const [upvote,  setUpvote] = useState(upvotes);
+    const [isPinned, setIsPinned] = useState(pinnedBool);
 
     const deleteCard = async (id) => {
         const deleteCardURL = dbApiPath + "/boards/cards/" + id;
@@ -42,6 +43,24 @@ const Card = ({id, title, text, img, upvotes, author}) => {
         setUpvote(upvote + 1);
     }
 
+    const togglePin = async (id) => {
+      const togglePinURL = `${dbApiPath}/cards/${id}/pin`;
+        try {
+          const response = await fetch(togglePinURL, {
+            method: "PUT",
+          });
+          if (!response.ok) {
+            throw new Error("Failed to update pin");
+          }
+          const body = await response.json();
+          //console.log(body);
+        } catch (error) {
+          console.log(error);
+        }
+      setIsPinned(!isPinned);
+      window.location.reload();
+    }
+
     return(
         <>
         <div className="card">
@@ -52,7 +71,7 @@ const Card = ({id, title, text, img, upvotes, author}) => {
             <div className='card-buttons'>
                 <button onClick={() => incrementUpvote(id)}>Upvote: {upvote}</button>
                 <button onClick={() => deleteCard(id)}>Delete</button>
-                <button><FontAwesomeIcon icon={faThumbtack} /></button>
+                <button onClick={() => togglePin(id)}><FontAwesomeIcon icon={faThumbtack}  className={isPinned ? 'pin' : ''}/></button>
             </div>
         </div>
         </>
