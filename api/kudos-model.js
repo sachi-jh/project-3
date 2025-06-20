@@ -42,6 +42,7 @@ module.exports = {
               title: data.title,
               text: data.text,
               image_url: data.image_url,
+              author: data.author,
               board: {
                 connect: { id: Number(data.board_id) }
               }
@@ -55,8 +56,8 @@ module.exports = {
         return deletedCard;
     },
 
-    async updateCardUpvote(id, data) {
-        const updatedCard = await prisma.card.update({where: {id: id}, data: data});
+    async updateCardUpvote(id) {
+        const updatedCard = await prisma.card.update({where: {id: id}, data: {upvotes: { increment: 1 }}});
         return updatedCard;
     }
 }

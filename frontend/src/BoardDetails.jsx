@@ -45,7 +45,7 @@ const BoardDetails = () => {
       <button onClick={openNewCardForm}>Create a Card</button>
       <div className="cards-list">
         {boardData?.cards?.map((card) => {
-            return <Card key={card.id} id={card.id} title={card.title} text={card.text} img={card.image_url}/>;
+            return <Card key={card.id} id={card.id} title={card.title} text={card.text} img={card.image_url} upvotes={card.upvotes} author={card.author}/>;
         })}
       </div>
       {createCardModal &&

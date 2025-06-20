@@ -98,7 +98,8 @@ server.post("/boards/cards", async (req, res, next) => {
         newCard.title !== undefined &&
         newCard.text !== undefined &&
         newCard.image_url !== undefined &&
-        newCard.board_id !== undefined
+        newCard.board_id !== undefined &&
+        newCard.author !== undefined
     )
     if (newCardValid) {
       const created = await Boards.createCard(newCard);
@@ -113,19 +114,20 @@ server.post("/boards/cards", async (req, res, next) => {
 
 //edit upvotes on a card
 //currently updates the whole card, rememeber to fix
+//changed to increment upvotes
 server.put("/boards/cards/:card_id/upvote", async (req, res, next) => {
     const id = parseInt(req.params.card_id)
-    const changes = req.body.upvotes
+    //const changes = req.body.upvotes
     try {
         const card = await Boards.fetchOneCard(id)
-        const changesValid = (
-            changes.title !== undefined &&
-            changes.text !== undefined &&
-            changes.image_url !== undefined &&
-            changes.upvotes !== undefined
-        )
-        if (card && changesValid) {
-            const updated = await Boards.updateCardUpvote(id, changes);
+        // const changesValid = (
+        //     changes.title !== undefined &&
+        //     changes.text !== undefined &&
+        //     changes.image_url !== undefined &&
+        //     changes.upvotes !== undefined
+        // )
+        if (card) {
+            const updated = await Boards.updateCardUpvote(id);
             res.status(201).json(updated);
         } else {
             next({ status: 422, message: 'title, category, and image are required' });
