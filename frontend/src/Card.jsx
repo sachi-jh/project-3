@@ -2,13 +2,14 @@ import './Card.css'
 import {useState} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbtack } from '@fortawesome/free-solid-svg-icons';
+const dbApiPath = import.meta.env.VITE_API_PATH;
 
 
 const Card = ({id, title, text, img, upvotes, author}) => {
     const [upvote,  setUpvote] = useState(upvotes);
 
     const deleteCard = async (id) => {
-        const deleteCardURL = "http://localhost:3000/boards/cards/" + id;
+        const deleteCardURL = dbApiPath + "/boards/cards/" + id;
         try {
           const response = await fetch(deleteCardURL, {
             method: "DELETE",
@@ -25,7 +26,7 @@ const Card = ({id, title, text, img, upvotes, author}) => {
     };
 
     const incrementUpvote = async (id) => {
-        const incrementUpvoteURL = `http://localhost:3000/boards/cards/${id}/upvote/`;
+        const incrementUpvoteURL = `${dbApiPath}/boards/cards/${id}/upvote/`;
         try {
           const response = await fetch(incrementUpvoteURL, {
             method: "PUT",

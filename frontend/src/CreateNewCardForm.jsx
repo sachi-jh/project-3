@@ -1,6 +1,8 @@
 import './CreateNewCardForm.css'
 import { useState } from 'react';
 const apiKey = import.meta.env.VITE_GIPHY_API_KEY
+const dbApiPath = import.meta.env.VITE_API_PATH;
+
 
 const CreateNewCardForm = ({closeNewCardForm, id}) => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -59,7 +61,7 @@ const CreateNewCardForm = ({closeNewCardForm, id}) => {
 
     const createNewCard = async (event) => {
         event.preventDefault();
-        const createCardURL = "http://localhost:3000/boards/cards";
+        const createCardURL = dbApiPath + "/boards/cards";
         try {
             const response = await fetch(createCardURL, {
             method: "POST",

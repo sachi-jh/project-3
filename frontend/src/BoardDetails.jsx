@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import Card from "./Card";
 import "./BoardDetails.css";
 import CreateNewCardForm from "./CreateNewCardForm";
+const dbApiPath = import.meta.env.VITE_API_PATH;
+
 
 const BoardDetails = () => {
   const { id } = useParams();
@@ -13,7 +15,7 @@ const BoardDetails = () => {
   useEffect(() => {
     const callBackendAPI = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/boards/${id}`);
+        const response = await fetch(`${dbApiPath}/boards/${id}`);
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }

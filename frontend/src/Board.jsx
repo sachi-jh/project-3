@@ -1,9 +1,10 @@
 import { Link } from 'react-router';
 import './Board.css'
+const dbApiPath = import.meta.env.VITE_API_PATH;
 
 const Board = ({id, title, img, category}) => {
     const deleteBoard = async (id) => {
-      const deleteBoardURL = "http://localhost:3000/boards/" + id;
+      const deleteBoardURL = dbApiPath + "/boards/" + id;
       try {
         const response = await fetch(deleteBoardURL, {
           method: "DELETE",

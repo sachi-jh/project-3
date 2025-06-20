@@ -1,6 +1,7 @@
 import { data } from 'react-router';
 import './CreateNewBoardForm.css'
 import {useState} from 'react'
+const dbApiPath = import.meta.env.VITE_API_PATH;
 
 const CategoryEnum = {
     inspiration: "Inspiration",
@@ -28,7 +29,7 @@ const CreateNewBoardForm = ({closeNewBoardForm, setData, data}) => {
 
     const createNewBoard = async (event) => {
         event.preventDefault();
-        const createBoardURL = "http://localhost:3000/boards/";
+        const createBoardURL = dbApiPath + "/boards/";
         try {
             const response = await fetch(createBoardURL, {
             method: "POST",
