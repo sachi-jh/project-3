@@ -52,6 +52,11 @@ img {
 
   .card-buttons {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     gap: 0.5rem;
+  }
+
+  .pin {
+    color: rgb(184, 180, 255);
   }

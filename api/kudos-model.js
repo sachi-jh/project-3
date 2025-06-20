@@ -17,7 +17,9 @@ module.exports = {
     },
 
     async fetchOne(id) {
-        const board = await prisma.board.findUnique({where: {id: id},  include: {cards: true}});
+        const board = await prisma.board.findUnique({where: {id: id},  include: {cards: {orderBy: {
+          pinnedAt: { sort: 'asc', nulls: 'last' },
+        }}}});
         return board;
     },
 
