@@ -75,15 +75,15 @@ server.delete("/boards/:id", async (req, res, next) => {
 })
 
 //delete a card by id
-server.delete("boards/cards/:card_id", async (req, res, next) => {
+server.delete("/boards/cards/:card_id", async (req, res, next) => {
     const card_id = parseInt(req.params.card_id)
     try {
         const card = await Boards.fetchOneCard(card_id)
         if (card) {
-            const deleted = await Boards.deleteCard(id)
+            const deleted = await Boards.deleteCard(card_id)
             res.json(deleted)
         } else {
-            next({ status: 404, message: 'board not found' })
+            next({ status: 404, message: 'card not found' })
         }
     } catch (err) {
         next(err)
