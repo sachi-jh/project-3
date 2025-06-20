@@ -4,9 +4,15 @@ import Dashboard from './Dashboard';
 function App() {
   return (
     <>
-      <div>
+      <header>
+        <h1>Kudos Board</h1>
+      </header>
+      <main>
         <Dashboard />
-      </div>
+      </main>
+      <footer>
+        <p>project 3</p>
+      </footer>
     </>
   )
 }

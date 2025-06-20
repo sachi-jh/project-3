@@ -4,3 +4,16 @@
   padding: 2rem;
   text-align: center;
 }
+
+header {
+  background-color: #813980;
+  color: rgba(255, 255, 255, 0.87);
+  padding: 2rem;
+  margin: 0px;
+}
+footer{
+  background-color: #813980;
+  color: rgba(255, 255, 255, 0.87);
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
