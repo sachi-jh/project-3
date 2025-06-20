@@ -24,7 +24,7 @@ const Board = ({id, title, img, category}) => {
             <img src={img} alt="board img"></img>
             <h3>{title}</h3>
             <p>{category}</p>
-            <button><Link to={`/board/${id}`} state={{title: title, category: category}}>View Board</Link></button>
+            <button><Link to={`/board/${id}`} state={{title: title, category: category}} className='view-link'>View Board</Link></button>
             <button onClick={() => deleteBoard(id)}>Delete Board</button>
         </div>
         </>
