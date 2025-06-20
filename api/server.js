@@ -92,7 +92,7 @@ server.delete("/boards/cards/:card_id", async (req, res, next) => {
 
 //create a new card on a board
 server.post("/boards/cards", async (req, res, next) => {
-    const newCard = req.body
+  const newCard = req.body
   try {
     const newCardValid = (
         newCard.title !== undefined &&
@@ -113,19 +113,11 @@ server.post("/boards/cards", async (req, res, next) => {
 })
 
 //edit upvotes on a card
-//currently updates the whole card, rememeber to fix
 //changed to increment upvotes
 server.put("/boards/cards/:card_id/upvote", async (req, res, next) => {
     const id = parseInt(req.params.card_id)
-    //const changes = req.body.upvotes
     try {
         const card = await Boards.fetchOneCard(id)
-        // const changesValid = (
-        //     changes.title !== undefined &&
-        //     changes.text !== undefined &&
-        //     changes.image_url !== undefined &&
-        //     changes.upvotes !== undefined
-        // )
         if (card) {
             const updated = await Boards.updateCardUpvote(id);
             res.status(201).json(updated);
@@ -135,6 +127,59 @@ server.put("/boards/cards/:card_id/upvote", async (req, res, next) => {
     } catch (err) {
         next(err)
     }
+})
+
+//get a card by id including comments
+server.get("/cards/:card_id", async (req, res, next) => {
+    const id = parseInt(req.params.card_id)
+    try {
+        const card = await Boards.fetchOneCard(id);
+        console.log(card)
+        if (card) {
+          res.json(card);
+        } else {
+          next({ message: "No cards match the search criteria", status: 404 });
+        }
+      } catch (err) {
+        next(err);
+      }
+})
+
+//toggle pins
+server.put("/cards/:card_id/pin", async (req, res, next) => {
+    const id = parseInt(req.params.card_id)
+    try {
+      const card = await Boards.fetchOneCard(id)
+      if (card) {
+          const updated = await Boards.updateCardPin(id);
+          res.status(201).json(updated);
+      } else {
+          next({ status: 422, message: 'title, category, and image are required' });
+      }
+  } catch (err) {
+      next(err)
+  }
+})
+
+//create new comment on a card
+server.post("/cards/comments", async (req, res, next) => {
+  const newComment = req.body
+  try {
+    const newCommentValid = (
+      newComment.text !== undefined &&
+      newComment.card_id !== undefined &&
+      newComment.author !== undefined
+    )
+    if (newCommentValid) {
+      const created = await Boards.createComment(newComment);
+      res.status(201).json(created);
+    } else {
+      next({ status: 422, message: 'title, category, and image are required' });
+    }
+  } catch (err) {
+    next(err);
+  }
+
 })
 
 //error handling middleware
