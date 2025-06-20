@@ -4,6 +4,7 @@ import Search from "./Search"
 import { useEffect, useState } from "react"
 import "./Dashboard.css"
 import CreateNewBoardForm from "./CreateNewBoardForm"
+const dbApiPath = import.meta.env.VITE_API_PATH;
 
 
 const Dashboard = () => {
@@ -13,7 +14,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         const callBackendAPI = async () => {
-            const fetchAllURL = "http://localhost:3000/boards";
+            const fetchAllURL = dbApiPath + "/boards";
             try {
               const response = await fetch(fetchAllURL);
               if (!response.ok) {
@@ -32,7 +33,7 @@ const Dashboard = () => {
     ///filter boards by category or creation date --> refactor to remove fetch and filter on client side
     const filterBoards = async (val) => {
         if(val !== "recent"){
-            const fetchCategoryURL = "http://localhost:3000/boards?category=" + val;
+            const fetchCategoryURL = dbApiPath + "/boards?category=" + val;
             try {
                 const response = await fetch(fetchCategoryURL);
                 if (!response.ok) {
@@ -45,7 +46,7 @@ const Dashboard = () => {
             }
         } else {
             //recent functionality
-            const fetchAllURL = "http://localhost:3000/boards";
+            const fetchAllURL = dbApiPath + "/boards";
             try {
                 const response = await fetch(fetchAllURL);
                 if (!response.ok) {
@@ -65,7 +66,7 @@ const Dashboard = () => {
         const searchedData = data.filter((board) => board.title.toLowerCase().includes(val.toLowerCase()));
         setData(searchedData);
         if(val === "" || searchedData.length == 0) {
-            const fetchAllURL = "http://localhost:3000/boards";
+            const fetchAllURL = dbApiPath + "/boards";
             try {
                 const response = await fetch(fetchAllURL);
                 if (!response.ok) {

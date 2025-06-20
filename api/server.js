@@ -185,7 +185,7 @@ server.post("/cards/comments", async (req, res, next) => {
 //error handling middleware
 server.use((req, res, next) => {
     next({ status: 404, message: "Not found" });
-  });
+});
 
 // Error handling middleware
 server.use((err, req, res, next) => {
