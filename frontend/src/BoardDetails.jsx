@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Card from "./Card";
 import "./BoardDetails.css";
 import CreateNewCardForm from "./CreateNewCardForm";
+import ViewCardModal from "./ViewCardModal";
 const dbApiPath = import.meta.env.VITE_API_PATH;
 
 
@@ -11,6 +12,8 @@ const BoardDetails = () => {
   //const { title, category } = useLocation().state;
   const [boardData, setBoardData] = useState(null);
   const [createCardModal, setCreateCardModal] = useState(false);
+  const [viewCardModal, setViewCardModal] = useState(false);
+  const [cardData, setCardData] = useState(null);
 
   useEffect(() => {
     const callBackendAPI = async () => {
@@ -36,6 +39,15 @@ const BoardDetails = () => {
     setCreateCardModal(false);
   }
 
+  const openViewCardModal = (id) => {
+    setViewCardModal(true);
+    setCardData(boardData.cards.find(card => card.id === id));
+  }
+  const closeViewCardModal = () => {
+    setViewCardModal(false);
+    setCardData(null);
+  }
+
 
   if (!boardData) {
     return <div>Loading...</div>;
@@ -48,14 +60,16 @@ const BoardDetails = () => {
       <button onClick={openNewCardForm}>Create a Card</button>
       <div className="cards-list">
         {boardData?.cards?.map((card) => {
-            return <Card key={card.id} id={card.id} title={card.title} text={card.text} img={card.image_url} upvotes={card.upvotes} author={card.author} pinnedBool={card.isPinned}/>;
+            return <Card key={card.id} id={card.id} title={card.title} text={card.text} img={card.image_url} upvotes={card.upvotes} author={card.author} pinnedBool={card.isPinned} openViewCardModal={openViewCardModal}/>;
         })}
       </div>
       {createCardModal &&
         <div className={createCardModal ? 'shown' : 'hidden'}>
           <CreateNewCardForm closeNewCardForm={closeNewCardForm} id={id}/>
         </div>
-
+      }
+      {viewCardModal &&
+        <ViewCardModal id={cardData.id} closeViewCardModal={closeViewCardModal}/>
       }
     </>
   );

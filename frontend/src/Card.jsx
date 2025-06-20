@@ -5,7 +5,7 @@ import { faThumbtack } from '@fortawesome/free-solid-svg-icons';
 const dbApiPath = import.meta.env.VITE_API_PATH;
 
 
-const Card = ({id, title, text, img, upvotes, author, pinnedBool}) => {
+const Card = ({id, title, text, img, upvotes, author, pinnedBool, openViewCardModal}) => {
     const [upvote,  setUpvote] = useState(upvotes);
     const [isPinned, setIsPinned] = useState(pinnedBool);
 
@@ -66,7 +66,7 @@ const Card = ({id, title, text, img, upvotes, author, pinnedBool}) => {
         <div className="card">
             <h3>{title}</h3>
             <p>{text}</p>
-            <img src={img} alt="card img"/>
+            <img src={img} alt="card img" onClick={() => openViewCardModal(id)}/>
             <p>{author}</p>
             <div className='card-buttons'>
                 <button onClick={() => incrementUpvote(id)}>Upvote: {upvote}</button>
